@@ -4,7 +4,7 @@ import './SpeedCalculator.css';
 import { Button, Checkbox, FormControlLabel, Grid, IconButton, TextField, Typography } from '@material-ui/core';
 import { DirectionsBike, FunctionsOutlined, PlusOneOutlined, RemoveCircleOutlineOutlined, SpeedOutlined } from '@material-ui/icons';
 
-const App = () => {
+const SpeedCalculator = () => {
 
     const BLUE_BIKER: number = 0;
     const RED_BIKER: number = 1;
@@ -73,6 +73,11 @@ const App = () => {
     }, [maxSpeed])
 
     const calculateBestOutcome = () => {
+        if(blueBikers.length <= 0) {
+            return;
+        }
+        // Add warning message. Must add coin denomination
+
         const blueBikersSorted = blueBikers.sort((a, b) => { return b - a; });
         const redBikersSorted = redBikers.sort((a, b) => { return a - b; });
 
@@ -87,73 +92,68 @@ const App = () => {
     };
 
     return (
-        <div className="App">
-            <header className="App-header">
-                <Typography variant="h2" component="h1">Speed <SpeedOutlined fontSize="large" /> Calculator</Typography>
-            </header>
-            <div className="content">
-                <Grid container justifyContent="center" spacing={3}>
-                    <Grid item xs={5}>
-                        <DirectionsBike color="primary" />
-                        <p><b color="primary">Blue</b> Team </p>
-                        <form noValidate autoComplete="off">
-                            <Grid container justifyContent="center" spacing={3}>
-                                {
-                                    blueBikers.map((blueBiker, index) => (
-                                        <Grid item xs={12} key={`grid-item-${index}-${blueBiker}-blue`}>
-                                            <TextField id={`outlined-basic-${index}`} key={`outlined-basic-${index}`} label="Biker Speed" value={blueBiker} variant="outlined" onChange={(e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => handleChangeInput(index, e, BLUE_BIKER)} />
-                                        </Grid>
-                                    ))
-                                }
-                            </Grid>
-                        </form>
-                    </Grid>
-                    <Grid item xs={2}>
-                        <Button variant="outlined" onClick={addBikersTeam}>
-                            <p>Add Team</p>
-                            <PlusOneOutlined />
-                        </Button>
-                        <div className="result">
-                            <p>{labelMessage}</p>
-                            {maxSpeed}
-                        </div>
-                    </Grid>
-                    <Grid item xs={5}>
-                        <DirectionsBike color="secondary" />
-                        <p><b color="secondary">Red</b> Team </p>
-                        <form noValidate autoComplete="off">
-                            <Grid container justifyContent="center" spacing={3}>
-                                {
-                                    redBikers.map((redBiker, indx) => (
-                                        <Grid item xs={12} key={`grid-item-${indx}-${redBiker}-red`} alignContent="space-between">
-                                            <TextField id={`outlined-basic-${indx}`} key={`outlined-basic-${indx}`} value={redBiker} label="Biker Speed" variant="outlined" onChange={(e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => handleChangeInput(indx, e, RED_BIKER)} />
-                                            <IconButton color="secondary" onClick={() => { removeBikerTeam(indx) }}>
-                                                <RemoveCircleOutlineOutlined />
-                                            </IconButton>
-                                        </Grid>
-                                    ))
-                                }
-                            </Grid>
-                        </form>
-                    </Grid>
+        <div className="content">
+            <Grid container justifyContent="center" spacing={3}>
+                <Grid item xs={5}>
+                    <DirectionsBike color="primary" />
+                    <p><b color="primary">Blue</b> Team </p>
+                    <form noValidate autoComplete="off">
+                        <Grid container justifyContent="center" spacing={3}>
+                            {
+                                blueBikers.map((blueBiker, index) => (
+                                    <Grid item xs={12} key={`grid-item-${index}-${blueBiker}-blue`}>
+                                        <TextField id={`outlined-basic-${index}`} key={`outlined-basic-${index}`} label="Biker Speed" value={blueBiker} variant="outlined" onChange={(e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => handleChangeInput(index, e, BLUE_BIKER)} />
+                                    </Grid>
+                                ))
+                            }
+                        </Grid>
+                    </form>
                 </Grid>
-                <Grid container className="footer">
-                    <Grid item xs={12}>
-                        <FormControlLabel
-                            control={<Checkbox color="primary" checked={fastest} onChange={handleChange} name="fastest" />}
-                            label="Fastest?"
-                            className="label"
-                        />
-                        <br />
-                        <Button variant="outlined" onClick={calculateBestOutcome}>
-                            Do Math!
-                            <FunctionsOutlined />
-                        </Button>
-                    </Grid>
+                <Grid item xs={2}>
+                    <Button variant="outlined" onClick={addBikersTeam}>
+                        <p>Add Team</p>
+                        <PlusOneOutlined />
+                    </Button>
+                    <div className="result">
+                        <p>{labelMessage}</p>
+                        {maxSpeed}
+                    </div>
                 </Grid>
-            </div>
+                <Grid item xs={5}>
+                    <DirectionsBike color="secondary" />
+                    <p><b color="secondary">Red</b> Team </p>
+                    <form noValidate autoComplete="off">
+                        <Grid container justifyContent="center" spacing={3}>
+                            {
+                                redBikers.map((redBiker, indx) => (
+                                    <Grid item xs={12} key={`grid-item-${indx}-${redBiker}-red`} alignContent="space-between">
+                                        <TextField id={`outlined-basic-${indx}`} key={`outlined-basic-${indx}`} value={redBiker} label="Biker Speed" variant="outlined" onChange={(e: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>) => handleChangeInput(indx, e, RED_BIKER)} />
+                                        <IconButton color="secondary" onClick={() => { removeBikerTeam(indx) }}>
+                                            <RemoveCircleOutlineOutlined />
+                                        </IconButton>
+                                    </Grid>
+                                ))
+                            }
+                        </Grid>
+                    </form>
+                </Grid>
+            </Grid>
+            <Grid container className="footer">
+                <Grid item xs={12}>
+                    <FormControlLabel
+                        control={<Checkbox color="primary" checked={fastest} onChange={handleChange} name="fastest" />}
+                        label="Fastest?"
+                        className="label"
+                    />
+                    <br />
+                    <Button variant="outlined" onClick={calculateBestOutcome}>
+                        Do Math!
+                        <FunctionsOutlined />
+                    </Button>
+                </Grid>
+            </Grid>
         </div>
     );
 }
 
-export default App;
+export default SpeedCalculator;

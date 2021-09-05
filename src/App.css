@@ -17,3 +17,10 @@
   font-size: calc(10px + 2vmin);
   color: white;
 }
+
+.menu {
+  position: fixed;
+  left: 4rem;
+  color: white;
+  top: 2rem;
+}
