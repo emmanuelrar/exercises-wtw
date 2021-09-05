@@ -1,0 +1,22 @@
+.content {
+    margin-top: 5vh;
+}
+
+.footer {
+    position: fixed;
+    left: 0;
+    bottom: 5vh;
+    width: 100%;
+    color: white;
+    text-align: center;
+}
+
+.result {
+    margin-top: 18vh;
+    font-size: 5rem;
+    font-weight: 100;
+}
+
+.result p{
+    font-size: 1rem;
+}
