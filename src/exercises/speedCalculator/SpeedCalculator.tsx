@@ -1,8 +1,9 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import './SpeedCalculator.css';
-import { Button, Checkbox, FormControlLabel, Grid, IconButton, TextField, Typography } from '@material-ui/core';
-import { DirectionsBike, FunctionsOutlined, PlusOneOutlined, RemoveCircleOutlineOutlined, SpeedOutlined } from '@material-ui/icons';
+import { Button, Checkbox, Collapse, FormControlLabel, Grid, IconButton, TextField, Typography } from '@material-ui/core';
+import { CloseOutlined, DirectionsBike, FunctionsOutlined, PlusOneOutlined, RemoveCircleOutlineOutlined, SpeedOutlined } from '@material-ui/icons';
+import { Alert } from '@material-ui/lab';
 
 const SpeedCalculator = () => {
 
@@ -15,6 +16,7 @@ const SpeedCalculator = () => {
     const [redBikers, setRedBikers] = useState<number[]>([]);
     const [maxSpeed, setMaxSpeed] = useState<number>(0);
     const [tandemBikeTeam, setTandemBikeTeam] = useState<Array<number[]>>([]);
+    const [showAlert, setShowAlert] = useState(false);
 
     const addBikersTeam = () => {
         blueBikers.push(0);
@@ -73,10 +75,10 @@ const SpeedCalculator = () => {
     }, [maxSpeed])
 
     const calculateBestOutcome = () => {
-        if(blueBikers.length <= 0) {
+        if (blueBikers.length <= 0) {
+            setShowAlert(true)
             return;
         }
-        // Add warning message. Must add coin denomination
 
         const blueBikersSorted = blueBikers.sort((a, b) => { return b - a; });
         const redBikersSorted = redBikers.sort((a, b) => { return a - b; });
@@ -138,6 +140,20 @@ const SpeedCalculator = () => {
                     </form>
                 </Grid>
             </Grid>
+            <div>
+                <Collapse in={showAlert}>
+                    <Alert severity="warning" action={
+                        <IconButton
+                            aria-label="close"
+                            color="inherit"
+                            size="small"
+                            onClick={() => { setShowAlert(false); }}>
+                            <CloseOutlined fontSize="inherit" />
+                        </IconButton>}>
+                        You must add some bikers.
+                    </Alert>
+                </Collapse>
+            </div>
             <Grid container className="footer">
                 <Grid item xs={12}>
                     <FormControlLabel

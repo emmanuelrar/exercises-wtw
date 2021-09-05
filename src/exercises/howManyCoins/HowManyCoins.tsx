@@ -1,14 +1,17 @@
-import { Button, Grid, TextField } from '@material-ui/core';
+import { Button, Collapse, Grid, IconButton, TextField } from '@material-ui/core';
 import { useState } from 'react';
 import './HowManyCoins.css';
 import '../speedCalculator/SpeedCalculator.css';
-import { LocalAtmOutlined, PlusOneOutlined } from '@material-ui/icons';
+import { CloseOutlined, LocalAtmOutlined, PlusOneOutlined } from '@material-ui/icons';
+import Alert from '@material-ui/lab/Alert';
 
 const HowManyCoins = () => {
 
     const [coinDenomination, setCoinDenomination] = useState<number[]>([])
     const [amountToChange, setAmountToChange] = useState<number>(0)
-    const [changeGiven, setChangeGiven] = useState<number>(0)
+    const [changeGiven, setChangeGiven] = useState<number>(-1)
+
+    const [showAlert, setShowAlert] = useState(false);
 
     const addDenomination = () => {
         coinDenomination.push(1);
@@ -40,28 +43,30 @@ const HowManyCoins = () => {
         let remainingAmout = amountToChange;
 
         if (coinDenomination.length <= 0) {
+            setShowAlert(true)
             return;
         }
-        // Add warning message. Must add coin denominations
 
         coinDenomination.sort((a, b) => { return b - a; }).forEach(denomination => {
             while (change > 0) {
                 change -= denomination;
-                if(change >= 0) {
+                if (change >= 0) {
                     remainingAmout = change;
                     coinQuantity++;
                 }
-                // console.log(remainingAmout);
-                console.log(coinQuantity);
             }
 
-            if(change < 0) {
+            if (change < 0) {
                 change = remainingAmout;
             }
-            // console.log('Amount to change: ', amountToChange);
-            // console.log('Denomination: ', denomination);
-            // console.log('Change: ', denomination % amountToChange);
+
         });
+
+        if (remainingAmout > 0) {
+            setChangeGiven(0);
+        } else {
+            setChangeGiven(coinQuantity);
+        }
     }
 
     return (
@@ -82,12 +87,27 @@ const HowManyCoins = () => {
                 </Grid>
             </form>
 
+            <div>
+                <Collapse in={showAlert}>
+                    <Alert severity="warning" action={
+                        <IconButton
+                            aria-label="close"
+                            color="inherit"
+                            size="small"
+                            onClick={() => { setShowAlert(false); }}>
+                            <CloseOutlined fontSize="inherit" />
+                        </IconButton>}>
+                        You must define some coin denominations.
+                    </Alert>
+                </Collapse>
+            </div>
+
             <Grid container className="footer">
                 <Grid item xs={12} key={`grid-item-change`}>
                     <TextField id={`outlined-basic-denomination`} key={`outlined-basic-denomination`} size="small" label="I need a change for" variant="outlined" onChange={(e) => handleAmountToChangeInput(e)} />
                 </Grid>
                 <Grid item xs={12}>
-                    {changeGiven > 0 ? <p>The amount of change given is {changeGiven} coins</p> : <p></p>}
+                    {changeGiven >= 0 ? <p>The amount of change given is {changeGiven === 0 ? -1 : changeGiven} coins</p> : <p></p>}
                 </Grid>
                 <Grid item xs={12}>
                     <Button variant="outlined" onClick={makeChange}>
