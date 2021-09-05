@@ -25,12 +25,20 @@ const App = () => {
 
     const handleChangeInput = (key: number, event: React.FormEvent<HTMLInputElement | HTMLTextAreaElement>, bikerColor: number) => {
         // VALIDATE NAN
-        const value = event.currentTarget.value;
+        const value = Number.parseInt(event.currentTarget.value);
         if (bikerColor === BLUE_BIKER) {
-            blueBikers[key] = Number.parseInt(value);
+            if (isNaN(value) || value < 0) {
+                blueBikers[key] = 0;
+            } else {
+                blueBikers[key] = value;
+            }
             setBlueBikers([...blueBikers])
         } else if (bikerColor === RED_BIKER) {
-            redBikers[key] = Number.parseInt(value);
+            if (isNaN(value) || value < 0) {
+                redBikers[key] = 0;
+            } else {
+                redBikers[key] = value;
+            }
             setRedBikers([...redBikers])
         }
     }
