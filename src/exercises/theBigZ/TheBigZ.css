@@ -1,0 +1,11 @@
+.input.MuiTextField-root {
+    width: inherit;
+}
+
+.grid-space {
+    margin-top: 4rem;
+}
+
+.MuiTextField-root{
+    width: 40px;
+}
