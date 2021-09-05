@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useState } from 'react';
 import './SpeedCalculator.css';
-import { Button, Grid, IconButton, TextField, Typography } from '@material-ui/core';
+import { Button, Checkbox, FormControlLabel, Grid, IconButton, TextField, Typography } from '@material-ui/core';
 import { DirectionsBike, FunctionsOutlined, PlusOneOutlined, RemoveCircleOutlineOutlined, SpeedOutlined } from '@material-ui/icons';
 
 const App = () => {
@@ -9,6 +9,8 @@ const App = () => {
     const BLUE_BIKER: number = 0;
     const RED_BIKER: number = 1;
 
+    const [labelMessage, setLabelMessage] = useState<string>("");
+    const [fastest, setFastest] = useState<boolean>(true);
     const [blueBikers, setBlueBikers] = useState<number[]>([]);
     const [redBikers, setRedBikers] = useState<number[]>([]);
     const [maxSpeed, setMaxSpeed] = useState<number>(0);
@@ -43,7 +45,13 @@ const App = () => {
     useEffect(() => {
         let speed: number = 0;
         tandemBikeTeam.forEach(team => {
-            speed += Math.max(...team);
+            if (fastest) {
+                speed += Math.max(...team);
+                setLabelMessage("Best speed outcome is");
+            } else {
+                setLabelMessage("Slowest speed outcome is");
+                speed += Math.min(...team);
+            }
         });
         if (speed > 0) {
             setMaxSpeed(speed);
@@ -65,6 +73,10 @@ const App = () => {
         }
         setTandemBikeTeam([...tandemBikeTeam]);
     }
+
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        setFastest(event.target.checked);
+    };
 
     return (
         <div className="App">
@@ -94,7 +106,7 @@ const App = () => {
                             <PlusOneOutlined />
                         </Button>
                         <div className="result">
-                            <p>Best speed outcome</p>
+                            <p>{labelMessage}</p>
                             {maxSpeed}
                         </div>
                     </Grid>
@@ -119,6 +131,12 @@ const App = () => {
                 </Grid>
                 <Grid container className="footer">
                     <Grid item xs={12}>
+                        <FormControlLabel
+                            control={<Checkbox color="primary" checked={fastest} onChange={handleChange} name="fastest" />}
+                            label="Fastest?"
+                            className="label"
+                        />
+                        <br />
                         <Button variant="outlined" onClick={calculateBestOutcome}>
                             Do Math!
                             <FunctionsOutlined />
