@@ -13,11 +13,7 @@ const TheBigZ = () => {
     const [xSize, setXSize] = useState(0);
     const [ySize, setYSize] = useState(0);
     const [board, setBoard] = useState<Array<number[]>>([]);
-
-    useEffect(() => {
-        console.log(board);
-    }, [board])
-
+    const [zigzaggedBoard, setZigzaggedBoard] = useState<number[]>([]);
 
     useEffect(() => {
         setBoard(Array(ySize).fill(2).map(row => new Array(xSize).fill(1)));
@@ -54,8 +50,37 @@ const TheBigZ = () => {
     }
 
     const zigzagAway = () => {
-        console.log('Zig Zagging');
+        let nextPosition = [0, 0];
+        let initialPosition = [0, 0];
+
+        let zigzaggedBoard: number[] = [];
+
+        board.forEach((y, yIndex) => {
+            y.forEach((x, xIndex) => {
+
+                if (typeof board[nextPosition[0]][nextPosition[1]] !== undefined) {
+                    zigzaggedBoard.push(board[nextPosition[0]][nextPosition[1]]);
+                }
+
+                nextPosition[0] -= 1;
+                nextPosition[1] += 1;
+
+                if (nextPosition[0] < 0 || nextPosition[1] < 0) {
+                    initialPosition = [initialPosition[0] + 1, initialPosition[1]];
+                    nextPosition = [...initialPosition];
+                }
+
+                if (initialPosition[0] >= board.length || nextPosition[1] >= y.length) {
+                    initialPosition = [board.length - 1, initialPosition[1] + 1];
+
+                    nextPosition = [...initialPosition];
+                }
+            });
+        });
+
+        setZigzaggedBoard(zigzaggedBoard);
     }
+
 
     return (
         <div className="content">
@@ -77,7 +102,6 @@ const TheBigZ = () => {
                         <div>
                             {y.map((x, idx) => (
                                 <TextField id={`key-x-${idx}`} key={`key-x-${idx}`} label="" size="small" variant="outlined" onChange={(e) => { handleInputBoard(idx, index, e) }} />
-                                // <div className="grid" key={`key-x-${idx}`}>{x}</div>
                             ))}
                             <br />
                         </div>
@@ -86,6 +110,11 @@ const TheBigZ = () => {
             </div>
 
             <Grid container className="footer">
+                <div className="result">
+                    {zigzaggedBoard.map((x, idx) => (
+                        <TextField id={`key-board-${idx}`} key={`key-board-${idx}`} label="" size="small" value={x} variant="outlined" />
+                    ))}
+                </div>
                 <Grid item xs={12}>
                     <Button variant="outlined" onClick={zigzagAway}>
                         ZigZag Away!
